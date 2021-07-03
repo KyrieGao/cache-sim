@@ -3,53 +3,56 @@
 
 #include <unordered_set>
 
-namespace esl {
-template <typename Key> class CachePolicy
+namespace esl
 {
-  public:
-    virtual ~CachePolicy()
-    {
-    }
-    // handle element insertion in a cache
-    virtual void Insert(const Key &key) = 0;
-    // handle request to the key-element in a cache
-    virtual void Touch(const Key &key) = 0;
-    // handle element deletion from a cache
-    virtual void Erase(const Key &key) = 0;
+template <typename Key>
+class CachePolicy
+{
+public:
+  virtual ~CachePolicy()
+  {
+  }
+  // handle element insertion in a cache
+  virtual void Insert(const Key &key) = 0;
+  // handle request to the key-element in a cache
+  virtual void Touch(const Key &key) = 0;
+  // handle element deletion from a cache
+  virtual void Erase(const Key &key) = 0;
 
-    // return a key of a replacement candidate
-    virtual const Key &ReplCandidate() const = 0;
+  // return a key of a replacement candidate
+  virtual const Key &ReplCandidate() const = 0;
 };
 
-template <typename Key> class NoCachePolicy : public CachePolicy<Key>
+template <typename Key>
+class NoCachePolicy : public CachePolicy<Key>
 {
-  public:
-    NoCachePolicy() = default;
-    ~NoCachePolicy() override = default;
+public:
+  NoCachePolicy() = default;
+  ~NoCachePolicy() override = default;
 
-    void Insert(const Key &key) override
-    {
-        key_storage.emplace(key);
-    }
+  void Insert(const Key &key) override
+  {
+    key_storage.emplace(key);
+  }
 
-    void Touch(const Key &key) override
-    {
-        // do not do anything
-    }
+  void Touch(const Key &key) override
+  {
+    // do not do anything
+  }
 
-    void Erase(const Key &key) override
-    {
-        key_storage.erase(key);
-    }
+  void Erase(const Key &key) override
+  {
+    key_storage.erase(key);
+  }
 
-    // return a key of a displacement candidate
-    const Key &ReplCandidate() const override
-    {
-        return *key_storage.cbegin();
-    }
+  // return a key of a displacement candidate
+  const Key &ReplCandidate() const override
+  {
+    return *key_storage.cbegin();
+  }
 
-  private:
-    std::unordered_set<Key> key_storage;
+private:
+  std::unordered_set<Key> key_storage;
 };
 } // namespace esl
 
