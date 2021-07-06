@@ -13,23 +13,23 @@ public:
   FIFOCachePolicy() = default;
   ~FIFOCachePolicy() = default;
 
-  void Insert(const Key &key) override
+  void insert(const Key &key) override
   {
     fifo_queue.emplace_front(key);
   }
   // handle request to the key-element in a cache
-  void Touch(const Key &key) override
+  void touch(const Key &key) override
   {
     // nothing to do here in the FIFO strategy
   }
   // handle element deletion from a cache
-  void Erase(const Key &key) override
+  void erase(const Key &key) override
   {
     fifo_queue.pop_back();
   }
 
   // return a key of a replacement candidate
-  const Key &ReplCandidate() const override
+  const Key &repl_candicate() const override
   {
     return fifo_queue.back();
   }

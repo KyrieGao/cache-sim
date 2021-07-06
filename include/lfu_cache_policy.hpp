@@ -18,7 +18,7 @@ public:
   LFUCachePolicy() = default;
   ~LFUCachePolicy() override = default;
 
-  void Insert(const Key &key) override
+  void insert(const Key &key) override
   {
     constexpr std::size_t INIT_VAL = 1;
     // all new value initialized with the frequency 1
@@ -26,7 +26,7 @@ public:
         frequency_storage.cbegin(), INIT_VAL, key);
   }
 
-  void Touch(const Key &key) override
+  void touch(const Key &key) override
   {
     // get the previous frequency value of a key
     auto elem_for_update = lfu_storage[key];
@@ -38,13 +38,13 @@ public:
         frequency_storage.cend(), std::move(updated_elem));
   }
 
-  void Erase(const Key &key) override
+  void erase(const Key &key) override
   {
     frequency_storage.erase(lfu_storage[key]);
     lfu_storage.erase(key);
   }
 
-  const Key &ReplCandidate() const override
+  const Key &repl_candicate() const override
   {
     // at the beginning of the frequency_storage we have the
     // least frequency used value
