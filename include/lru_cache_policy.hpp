@@ -36,7 +36,7 @@ public:
   }
 
   // return a key of a displacement candidate
-  const Key &repl_candicate() const override
+  const Key &repl_candicate() override
   {
     return lru_queue.back();
   }

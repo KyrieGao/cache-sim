@@ -20,7 +20,7 @@ public:
   virtual void erase(const Key &key) = 0;
 
   // return a key of a replacement candidate
-  virtual const Key &repl_candicate() const = 0;
+  virtual const Key &repl_candicate() = 0;
 };
 
 template <typename Key>
@@ -46,7 +46,7 @@ public:
   }
 
   // return a key of a displacement candidate
-  const Key &repl_candicate() const override
+  const Key &repl_candicate() override
   {
     return *key_storage.cbegin();
   }

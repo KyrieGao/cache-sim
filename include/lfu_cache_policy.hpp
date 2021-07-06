@@ -44,7 +44,7 @@ public:
     lfu_storage.erase(key);
   }
 
-  const Key &repl_candicate() const override
+  const Key &repl_candicate() override
   {
     // at the beginning of the frequency_storage we have the
     // least frequency used value

@@ -2,6 +2,7 @@
 #define NRU_CACHE_POLICY_HPP
 
 #include "cache_policy.hpp"
+#include <iostream>
 #include <vector>
 #include <utility>
 
@@ -59,19 +60,18 @@ public:
   }
 
   // Return a key of a displacement candidate
-  const Key &repl_candicate() const override
+  const Key &repl_candicate() override
   {
     size_t max_way_num = nru_vec_.size();
-    nru_it_erator nru_it = nru_it_;
-    nru_it == nru_vec_.end() ? nru_vec_.begin() : nru_it;
+    nru_it_ = (nru_it_ == nru_vec_.end()) ? nru_vec_.begin() : nru_it_;
     int i = 0;
-    while (i < max_way_num) 
+    while (i <= max_way_num) 
     {
-      if (nru_it->second) 
+      if (nru_it_->second) 
       {
-        nru_it->second = false;
-        nru_it++;
-        nru_it == nru_vec_.end() ? nru_vec_.begin() : nru_it;
+        nru_it_->second = false;
+        nru_it_++;
+        nru_it_ = (nru_it_ == nru_vec_.end()) ? nru_vec_.begin() : nru_it_;
         i++;
       } 
       else 
@@ -79,7 +79,7 @@ public:
         break;
       }      
     }
-    return nru_it->first;
+    return nru_it_->first;
   }
 
 private:

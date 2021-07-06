@@ -29,7 +29,7 @@ public:
   }
 
   // return a key of a replacement candidate
-  const Key &repl_candicate() const override
+  const Key &repl_candicate() override
   {
     return fifo_queue.back();
   }

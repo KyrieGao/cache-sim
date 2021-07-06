@@ -35,3 +35,15 @@ TEST(NRUCache, ESL_Missing_Value)
   EXPECT_EQ(fc.get(0, 1), 10);
   EXPECT_THROW(fc.get(0, 2), std::range_error);
 }
+
+TEST(NRUCache, ESL_Replace_Test)
+{
+  esl_nru_cache_t<int, int> fc(1, 2);
+
+  fc.put(0, 1, 10);
+  EXPECT_EQ(fc.get_cache_set_size(0), 1);
+  EXPECT_EQ(fc.is_cached(0, 1), true);
+  fc.put(0, 2, 20);
+  fc.put(0, 3, 30);
+  EXPECT_THROW(fc.get(0, 1), std::range_error);
+}
