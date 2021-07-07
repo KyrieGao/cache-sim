@@ -30,9 +30,7 @@ public:
       nru_it_->first = key;
       nru_it_->second = true;
       nru_it_++;
-      if (nru_it_ == nru_vec_.end()) {
-        nru_it_ = nru_vec_.begin();
-      }
+      nru_it_ = (nru_it_ == nru_vec_.end()) ? nru_vec_.begin() : nru_it_;
     }
   }
 

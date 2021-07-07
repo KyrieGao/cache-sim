@@ -2,7 +2,9 @@
 #define TPLRU_CACHE_POLICY_HPP
 
 #include "cache_policy.hpp"
-#include <list>
+#include <iostream>
+#include <vector>
+#include <utility>
 
 namespace esl
 {
@@ -10,32 +12,77 @@ template <typename Key>
 class TPLRUCachePolicy : public CachePolicy<Key>
 {
 public:
-  TPLRUCachePolicy() = default;
+  using tplru_it_erator = typename std::vector<std::pair<Key, bool>>::iterator;
+
+  TPLRUCachePolicy() {
+    tplru_it_ = tplru_vec_.end();
+  } 
+ 
   ~TPLRUCachePolicy() = default;
 
+  // Allocate
   void insert(const Key &key) override
   {
-    fifo_queue.emplace_front(key);
-  }
-  // handle request to the key-element in a cache
-  void touch(const Key &key) override
-  {
-    // nothing to do here in the FIFO strategy
-  }
-  // handle element deletion from a cache
-  void erase(const Key &key) override
-  {
-    fifo_queue.pop_back();
+    if (tplru_it_ == tplru_vec_.end()) {
+      tplru_vec_.push_back(std::make_pair<Key, bool>((Key)key, (bool)true));
+      tplru_it_ = tplru_vec_.end();
+    } else {
+      tplru_it_->first = key;
+      tplru_it_->second = true;
+      tplru_it_++;
+      tplru_it_ = (tplru_it_ == tplru_vec_.end()) ? tplru_vec_.begin() : tplru_it_;
+    }
   }
 
-  // return a key of a replacement candidate
+  // Find and update
+  void touch(const Key &key) override
+  {
+    tplru_it_erator it;
+    for (it = tplru_vec_.begin(); it != tplru_vec_.end(); it++) {
+      if (key == it->first) {
+        it->second = true;
+        break;
+      }
+    }
+  }
+
+  void erase(const Key &key) override
+  {
+    tplru_it_erator it;
+    for (it = tplru_vec_.begin(); it != tplru_vec_.end(); it++) {
+      if (it->first == key) {
+        it->second = false;
+        break;
+      }
+    }
+  }
+
+  // Return a key of a displacement candidate
   const Key &repl_candicate() override
   {
-    return fifo_queue.back();
+    size_t max_way_num = tplru_vec_.size();
+    tplru_it_ = (tplru_it_ == tplru_vec_.end()) ? tplru_vec_.begin() : tplru_it_;
+    int i = 0;
+    while (i <= max_way_num) 
+    {
+      if (tplru_it_->second) 
+      {
+        tplru_it_->second = false;
+        tplru_it_++;
+        tplru_it_ = (tplru_it_ == tplru_vec_.end()) ? tplru_vec_.begin() : tplru_it_;
+        i++;
+      } 
+      else 
+      {
+        break;
+      }      
+    }
+    return tplru_it_->first;
   }
 
 private:
-  std::list<Key> fifo_queue;
+  std::vector<std::pair<Key, bool>> tplru_vec_;
+  tplru_it_erator tplru_it_;
 };
 } // namespace esl
 
