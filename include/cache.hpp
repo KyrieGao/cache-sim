@@ -175,7 +175,9 @@ public:
   CacheSet(size_t max_way_num, const Policy &policy = Policy())
       : max_way_num_(max_way_num),
         replace_policy_(policy)
-  {}
+  {
+    replace_policy_.set_way_num(max_way_num_);
+  }
 
   ~CacheSet()
   {

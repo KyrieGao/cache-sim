@@ -34,8 +34,13 @@ public:
     return fifo_queue.back();
   }
 
+
+  void set_way_num(const size_t way_num) override{
+    way_num_ = way_num;
+  }
 private:
   std::list<Key> fifo_queue;
+  size_t way_num_;
 };
 } // namespace esl
 

@@ -51,9 +51,14 @@ public:
     return frequency_storage.cbegin()->second;
   }
 
+  void set_way_num(const size_t way_num) override{
+    way_num_ = way_num;
+  }
+
 private:
   std::multimap<std::size_t, Key> frequency_storage;
   std::unordered_map<Key, lfu_iterator> lfu_storage;
+  size_t way_num_;
 };
 } // namespace esl
 

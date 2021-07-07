@@ -21,6 +21,8 @@ public:
 
   // return a key of a replacement candidate
   virtual const Key &repl_candicate() = 0;
+
+  virtual void set_way_num(const size_t way_num) = 0;
 };
 
 template <typename Key>
@@ -51,8 +53,12 @@ public:
     return *key_storage.cbegin();
   }
 
+  void set_way_num(const size_t way_num) override{
+    way_num_ = way_num;
+  }
 private:
   std::unordered_set<Key> key_storage;
+  size_t way_num_;
 };
 } // namespace esl
 

@@ -37,13 +37,13 @@ public:
   // Find and update
   void touch(const Key &key) override
   {
-    tplru_it_erator it;
-    for (it = tplru_vec_.begin(); it != tplru_vec_.end(); it++) {
-      if (key == it->first) {
-        it->second = true;
-        break;
-      }
-    }
+    // tplru_it_erator it;
+    // for (it = tplru_vec_.begin(); it != tplru_vec_.end(); it++) {
+    //   if (key == it->first) {
+    //     it->second = true;
+    //     break;
+    //   }
+    // }
   }
 
   void erase(const Key &key) override
@@ -80,9 +80,13 @@ public:
     return tplru_it_->first;
   }
 
+  void set_way_num(const size_t way_num) override{
+    way_num_ = way_num;
+  }
 private:
   std::vector<std::pair<Key, bool>> tplru_vec_;
   tplru_it_erator tplru_it_;
+  size_t way_num_;
 };
 } // namespace esl
 

@@ -41,9 +41,15 @@ public:
     return lru_queue.back();
   }
 
+  void set_way_num(const size_t way_num) override
+  {
+    way_num_ = way_num;
+  }
+
 private:
   std::list<Key> lru_queue;
   std::unordered_map<Key, lru_iterator> key_finder;
+  size_t way_num_;
 };
 } // namespace esl
 

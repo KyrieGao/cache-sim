@@ -80,9 +80,14 @@ public:
     return nru_it_->first;
   }
 
+  void set_way_num(const size_t way_num) override{
+    way_num_ = way_num;
+  }
+
 private:
   std::vector<std::pair<Key, bool>> nru_vec_;
   nru_it_erator nru_it_;
+  size_t way_num_;
 };
 } // namespace esl
 
