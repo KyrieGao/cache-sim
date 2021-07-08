@@ -3,68 +3,67 @@
 #include <gtest/gtest.h>
 
 template <typename Key, typename Value>
-using lru_cache_t =
-    typename esl::fixed_sized_cache<Key, Value, esl::LRUCachePolicy<Key>>;
+using esl_lru_cache_t = typename esl::Cache<Key, Value, esl::LRUCachePolicy<Key>>;
 
-TEST(CacheTest, SimplePut)
+TEST(CacheTest, Simpleput)
 {
-  lru_cache_t<std::string, int> cache(1);
+  esl_lru_cache_t<std::string, int> cache(1, 1);
 
-  cache.Put("test", 666);
+  cache.put(0, "test", 666);
 
-  EXPECT_EQ(cache.Get("test"), 666);
+  EXPECT_EQ(cache.get(0, "test"), 666);
 }
 
 TEST(CacheTest, MissingValue)
 {
-  lru_cache_t<std::string, int> cache(1);
+  esl_lru_cache_t<std::string, int> cache(1, 1);
 
-  EXPECT_THROW(cache.Get("test"), std::range_error);
+  EXPECT_THROW(cache.get(0, "test"), std::range_error);
 }
 
 TEST(CacheTest, KeepsAllValuesWithinCapacity)
 {
   constexpr int CACHE_CAP = 50;
   const int TEST_RECORDS = 100;
-  lru_cache_t<int, int> cache(CACHE_CAP);
+  esl_lru_cache_t<int, int> cache(1, CACHE_CAP);
 
   for (int i = 0; i < TEST_RECORDS; ++i)
   {
-    cache.Put(i, i);
+    cache.put(0, i, i);
   }
 
   for (int i = 0; i < TEST_RECORDS - CACHE_CAP; ++i)
   {
-    EXPECT_THROW(cache.Get(i), std::range_error);
+    EXPECT_THROW(cache.get(0, i), std::range_error);
   }
 
   for (int i = TEST_RECORDS - CACHE_CAP; i < TEST_RECORDS; ++i)
   {
-    EXPECT_EQ(i, cache.Get(i));
+    EXPECT_EQ(i, cache.get(0, i));
   }
 }
 
-TEST(LRUCache, Remove_Test)
+TEST(LRUCache, is_success_remove_Test)
 {
   constexpr std::size_t TEST_SIZE = 10;
-  lru_cache_t<std::string, int> fc(TEST_SIZE);
+  esl_lru_cache_t<std::string, int> fc(1, TEST_SIZE);
 
   for (std::size_t i = 0; i < TEST_SIZE; ++i)
   {
-    fc.Put(std::to_string(i), i);
+    fc.put(0, std::to_string(i), i);
   }
 
-  EXPECT_EQ(fc.Size(), TEST_SIZE);
+  EXPECT_EQ(fc.get_cache_set_size(0), TEST_SIZE);
 
   for (std::size_t i = 0; i < TEST_SIZE; ++i)
   {
-    EXPECT_TRUE(fc.Remove(std::to_string(i)));
+    EXPECT_TRUE(fc.is_success_remove(0, std::to_string(i)));
   }
 
-  EXPECT_EQ(fc.Size(), 0);
+  EXPECT_EQ(fc.get_cache_set_size(0), 0);
 
   for (std::size_t i = 0; i < TEST_SIZE; ++i)
   {
-    EXPECT_FALSE(fc.Remove(std::to_string(i)));
+    EXPECT_FALSE(fc.is_success_remove(0, std::to_string(i)));
   }
 }
