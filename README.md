@@ -3,14 +3,13 @@
 
 # C++ Cache implementation
 
-This project implements a simple thread-safe cache with several page replacement policies:
+This project implements a simple cache with several page replacement policies:
 
   * Least Recently Used
   * First-In/First-Out
   * Least Frequently Used
   * Not Recently Used
-
-More about cache algorithms and policy you could read on [Wikipedia](https://en.wikipedia.org/wiki/Cache_algorithms)
+  * ......
 
 # Usage
 
@@ -18,13 +17,14 @@ Using this library is simple. It is necessary to include header with the cache i
 and appropriate header with the cache policy if it is needed. If not then the non-special algorithm will be used (it removes
 the last element which key is the last in the internal container).
 
-Currently there is only three of them:
+Currently there is only five of them:
 
   * `fifo_cache_policy.hpp`
   * `lfu_cache_policy.hpp`
   * `lru_cache_policy.hpp`
   * `nru_cache_policy.hpp`
   * `tplru_cache_policy.hpp`
+  * `......`
 
 Example for the LRU policy:
 
@@ -33,18 +33,18 @@ Example for the LRU policy:
 #include "cache.hpp"
 #include "lru_cache_policy.hpp"
 
-// alias for easy class typing
 template <typename Key, typename Value>
-using lru_cache_t = typename caches::fixed_sized_cache<Key, Value, LRUCachePolicy<Key>>;
+using lru_cache_t = typename esl::Cache<Key, Value, LRUCachePolicy<Key>>;
 
 void foo(...) {
-  constexpr std::size_t CACHE_SIZE = 256;
-  lru_cache_t<std::string, int> cache(CACHE_SIZE);
+  constexpr std::size_t max_set_num = 256;
+  constexpr std::size_t max_way_num = 256;
+  lru_cache_t<std::string, int> cache(max_set_num, max_way_num);
 
-  cache.Put("Hello", 1);
-  cache.Put("world", 2);
+  cache.put(0, "Hello", 1);
+  cache.put(0, "world", 2);
 
-  std::cout << cache.Get("Hello") << cache.Get("world") << std::endl;
+  std::cout << cache.get(0, "Hello") << cache.get(0, "world") << std::endl;
   // "12"
 }
 ```
