@@ -8,6 +8,7 @@ This project implements a simple thread-safe cache with several page replacement
   * Least Recently Used
   * First-In/First-Out
   * Least Frequently Used
+  * Not Recently Used
 
 More about cache algorithms and policy you could read on [Wikipedia](https://en.wikipedia.org/wiki/Cache_algorithms)
 
@@ -22,6 +23,8 @@ Currently there is only three of them:
   * `fifo_cache_policy.hpp`
   * `lfu_cache_policy.hpp`
   * `lru_cache_policy.hpp`
+  * `nru_cache_policy.hpp`
+  * `tplru_cache_policy.hpp`
 
 Example for the LRU policy:
 
